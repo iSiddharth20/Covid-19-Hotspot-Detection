@@ -1,14 +1,18 @@
 # Importing Libraries
-import io
 import requests
 import pandas as pd 
 
-# Obtaining the Data
-url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSc_2y5N0I67wDU38DjDh35IZSIS30rQf7_NYZhtYYGU1jJYT6_kDx4YpF-qw0LSlGsBYP8pqM_a1Pd/pub?output=csv'
-res = requests.get(url)
+# Data Source
+source_url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSz8Qs1gE_IYpzlkFkCXGcL_BqR8hZieWVi-rphN1gfrO3H4lDtVZs4kd0C3P8Y9lhsT1rhoB-Q_cP4/pub?output=xlsx'
 
-# Storing the data in a Pandas Data Frame
-raw_data = pd.read_csv(io.BytesIO(res.content), sep=',')
+# Getting Data from Source
+r = requests.get(source_url, allow_redirects=True)
+
+# Writing Data to File for easy Access and Security
+open('dataset.xlsx', 'wb').write(r.content)
+
+# Getting Data from File to Pandas Data Frame
+raw_data = pd.read_excel('dataset.xlsx',sheet_name='Raw_Data')
 
 # Cleaning and Obtaining just the required columns of the data
 data = raw_data[['Detected State','Detected City']]
